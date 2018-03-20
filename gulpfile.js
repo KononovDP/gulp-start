@@ -35,16 +35,14 @@ gulp.task('sass', function() {
 // Таск для сбора сторонних .css файлов (плагины)
 gulp.task('lib-css', function() {
 	// указываем путь к необходимым файлам
-	return gulp.src([
-		'app/libs/object-fit/dist/polyfill.object-fit.css',
-		])
+	return gulp.src([])
 	// склеиваем их в один файл, с учетом из порядка на предыдущем шаге 
 	.pipe(concat('lib.css'))
 	// выгружаем полученный файл в указанную папку
 	.pipe(gulp.dest('app/css'));
 });
 
-// Таск для кастопных скриптов
+// Таск для кастомных скриптов
 gulp.task('js', function() {
 	// берем файл скриптов
 	return gulp.src('app/js/common.js')
@@ -57,11 +55,11 @@ gulp.task('lib-js', function() {
 	// указываем путь к необходимым файлам
 	return gulp.src([
 		'app/libs/jquery/dist/jquery.min.js',
-		'app/libs/object-fit/dist/polyfill.object-fit.min.js'
-		])
-	// склеиваем их в один файл, с учетом из порядка на предыдущем шаге 
+		'app/libs/object-fit-images/dist/ofi.browser.js'
+	])
+	// склеиваем их в один файл, с учетом их порядка на предыдущем шаге 
 	.pipe(concat('lib.min.js'))
-	// минимизировать получившийся фалй
+	// минимизируем получившийся файл
 	.pipe(uglify()) 
 	// выгружаем полученные скрипты в указанную папку
 	.pipe(gulp.dest('app/js'))

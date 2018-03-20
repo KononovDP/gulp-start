@@ -1,17 +1,43 @@
 $(document).ready(function() {
 
-	//выпадающий список
+	var scrollTop = $(window).scrollTop();
+
+	//lock/unlock body scroll
+	function lockBody() {
+		if($(window).scrollTop()) {
+		 	scrollTop = $(window).scrollTop();
+		 	$('.wrapper').css({
+		 		top: - (scrollTop)
+		 	});
+		}
+		$('html,body').css({height: "100%", overflow: "hidden"});
+	}
+	function unlockBody() {
+		$('html,body').css({height: "", overflow: ""});
+		$('.wrapper').css({
+			top: ''
+		});
+		window.scrollTo(0, scrollTop);
+		window.setTimeout(function () {
+			scrollTop = null;
+		}, 0);
+	}
+
+	//custom dropdown menu
 	$('.select-option_selected').click(function(){
-		$(this).parents('.select').find('.select-list').fadeIn(0);
-		$(this).parents('.select').toggleClass('select-open');
+		var parent = $(this).parents('.select');
+		
+		parent.find('.select-list').fadeIn(0);
+		parent.toggleClass('select-open');
 	});
 
 	$('.select-list .select-option').click(function(){
-		var text = $(this).text();
-		$(this).parents('.select').find('.select-option_selected').text(text);
-		$(this).parents('.select').find('input[type="hidden"]').val(text);
-		$(this).parents('.select-list').fadeOut(0);		
-		$(this).parents('.select').removeClass('select-open');
+		var $this = $(this);
+		var text = $this.text();
+		$this.parents('.select').find('.select-option_selected').text(text);
+		$this.parents('.select').find('input[type="hidden"]').val(text);
+		$this.parents('.select-list').fadeOut(0);		
+		$this.parents('.select').removeClass('select-open');
 	});
 
 	$(function(){
@@ -22,7 +48,6 @@ $(document).ready(function() {
 			event.stopPropagation();
 		});
 	});
-	//выпадающий список////////////////////////////////
 
 	//tabs on JS
 	$('.tab-toggle').on('click' , function() {
@@ -37,10 +62,9 @@ $(document).ready(function() {
 
 		return false;
 	});
-	//tabs on JS///////////////////////////////////////
 
-	//popup////////////////////////////////////////////
-	$('.js-show-popup').on('click' , function() {
+	//popup
+	$('.js-show-popup').on('click', function() {
 		var dataPopup = $(this).attr("data-popup");
 
 		$(".popup-overlay[data-popup='"+dataPopup+"']").fadeIn('500');
@@ -70,33 +94,26 @@ $(document).ready(function() {
 	$('.js-close-popup').on('click' , function() {
 		$('.popup-overlay').fadeOut('500');
 	});
-	//popup////////////////////////////////////////////
 
 	
-	//blocks with equal height/////////////////////////
+	//blocks with equal height
 	$(window).on('load resize', function() {
 		$(".item-wrap").each(function () {
-			var container = $(this);
-			var mh = 0;
-			container.find('.item').each(function () {
+			var itemParent = $(this);
+			var maxHeight = 0;
+
+			itemParent.find('.item').each(function () {
 			   $(this).height('auto');
-			   var h_block = parseInt($(this).height());
-			   if(h_block > mh) {
-				  mh = h_block;
+			   var itemHeight = parseInt($(this).height());
+			   if(itemHeight > maxHeight) {
+				  maxHeight = itemHeight;
 			   };
 			});
-			container.find('.item').height(mh);
+			itemParent.find('.item').height(maxHeight);
 		})
 	});
-	//blocks with equal height/////////////////////////
 	
-	//object-fit polyfill//////////////////////////////
-	objectFit.polyfill({
-	    selector: 'img', // this can be any CSS selector
-	    fittype: 'cover', // either contain, cover, fill or none
-	    disableCrossDomain: 'true' // either 'true' or 'false' to not parse external CSS files.
-	});
-	//object-fit polyfill//////////////////////////////
-
+	//object-fit polyfill
+	objectFitImages('.cover-img')
 
 }); 
